@@ -1,16 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
 
-
-get_ipython().system('pip install pandas scikit-learn matplotlib numpy')
-
-
-# In[15]:
-
-
-get_ipython().system('pip install seaborn')
 
 
 # In[3]:
@@ -61,7 +52,6 @@ df
 # In[10]:
 
 
-get_ipython().system('pip install nltk')
 
 
 # In[11]:
