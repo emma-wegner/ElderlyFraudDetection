@@ -1,27 +1,39 @@
-#import flask 
-from flask import Flask, request, jsonify
-#importing pickle
-import pickle
-#importing pandas
+import streamlit as st
 import pandas as pd
-from PhishingPredictor import EmailPreProcessor  
+import pickle
+from PhishingPredictor import EmailPreProcessor
+from sklearn.preprocessing import FunctionTransformer
 
-#app flask
-app = Flask(__name__)
-#pickle loading file
-model = pickle.load(open("final_model.pkl", "rb"))
+def combine_subject_body(x):
+    return x['subject'].fillna('') + ' ' + x['body'].fillna('')
 
-#route app, methods: POST
-@app.route("/prediction-check", methods=["POST"])
-#function for prediction 
-def predict_fishing():
-  #data request json
-    data = request.json
-  #data for the email
-    data_for_email = pd.DataFrame([data])
-    prediction = model.predict(data_for_email)
-    return jsonify({"prediction": int(prediction[0])})
+# load pickle
+with open("final_model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-#main
-if __name__ == "__main__":
-    app.run(debug=True)
+st.title("Phishing Email Detector")
+
+# User input fields
+subject = st.text_input("Email Subject")
+body = st.text_area("Email Body")
+sender = st.text_input("Sender Email")
+date = st.date_input("Date Received")
+
+# Predict button
+if st.button("Check for Phishing"):
+    # Format input as DataFrame for your model
+    input_data = pd.DataFrame([{
+        "subject": subject,
+        "body": body,
+        "sender": sender,
+        "date": pd.to_datetime(date)
+    }])
+
+    # Make prediction
+    prediction = model.predict(input_data)[0]
+
+    # Display result
+    if prediction == 1:
+        st.error("This email is probably a phishing attempt ask for help")
+    else:
+        st.success("This email is probably safe")

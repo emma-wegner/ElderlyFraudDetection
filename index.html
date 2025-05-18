@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Phishing Email Detector</h2>
+    <form action="/predict" method="post">
+        Subject: <input name="subject"><br><br>
+        Body: <textarea name="body"></textarea><br><br>
+        Sender: <input name="sender"><br><br>
+        Date: <input type="datetime-local" name="date"><br><br>
+        <input type="submit" value="Check">
+    </form>
+    {% if prediction is not none %}
+        <h3>Prediction: {{ 'Phishing' if prediction == 1 else 'Legit' }}</h3>
+    {% endif %}
+</body>
+</html>
